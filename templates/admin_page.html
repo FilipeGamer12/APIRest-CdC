@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Administrador</title>
+</head>
+<body>
+    <h1>Página do Administrador</h1>
+
+    <!-- Formulário para criar produto -->
+    <h2>Criar Produto</h2>
+    <form id="create-product-form">
+        <label for="nome-produto">Nome:</label>
+        <input type="text" id="nome-produto" name="nome-produto" required><br><br>
+        <label for="preco-produto">Preço:</label>
+        <input type="number" id="preco-produto" name="preco-produto" required><br><br>
+        <button type="submit">Criar Produto</button>
+    </form>
+
+    <h2>Produtos</h2>
+    <ul id="product-list">
+        <!-- Lista de produtos será carregada aqui -->
+    </ul>
+
+    <!-- Formulário para editar produto -->
+    <h2>Editar Produto</h2>
+    <form id="edit-product-form" style="display:none;">
+        <input type="hidden" id="edit-produto-id">
+        <label for="edit-nome-produto">Nome:</label>
+        <input type="text" id="edit-nome-produto" name="nome-produto" required><br><br>
+        <label for="edit-preco-produto">Preço:</label>
+        <input type="number" id="edit-preco-produto" name="preco-produto" required><br><br>
+        <button type="submit">Editar Produto</button>
+    </form>
+
+    <h2>Usuários</h2>
+    <ul id="user-list">
+        <!-- Lista de usuários será carregada aqui -->
+    </ul>
+
+    <!-- Formulário para criar usuário -->
+    <h2>Criar Usuário</h2>
+    <form id="create-user-form">
+        <label for="nome-usuario">Nome:</label>
+        <input type="text" id="nome-usuario" name="nome-usuario" required><br><br>
+        <label for="email-usuario">Email:</label>
+        <input type="email" id="email-usuario" name="email-usuario" required><br><br>
+        <label for="senha-usuario">Senha:</label>
+        <input type="password" id="senha-usuario" name="senha-usuario" required><br><br>
+        <label for="telefone-usuario">Telefone:</label>
+        <input type="text" id="telefone-usuario" name="telefone-usuario" required><br><br>
+        <label for="admin-usuario">Administrador:</label>
+        <select id="admin-usuario" name="admin-usuario">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+        </select><br><br>
+        <button type="submit">Criar Usuário</button>
+    </form>
+
+    <!-- Formulário para editar usuário -->
+    <h2>Editar Usuário</h2>
+    <form id="edit-user-form" style="display:none;">
+        <input type="hidden" id="edit-usuario-id">
+        <label for="edit-nome-usuario">Nome:</label>
+        <input type="text" id="edit-nome-usuario" name="nome-usuario" required><br><br>
+        <label for="edit-email-usuario">Email:</label>
+        <input type="email" id="edit-email-usuario" name="email-usuario" required><br><br>
+        <label for="edit-senha-usuario">Senha:</label>
+        <input type="password" id="edit-senha-usuario" name="senha-usuario" required><br><br>
+        <label for="edit-telefone-usuario">Telefone:</label>
+        <input type="text" id="edit-telefone-usuario" name="telefone-usuario" required><br><br>
+        <label for="edit-admin-usuario">Administrador:</label>
+        <select id="edit-admin-usuario" name="admin-usuario">
+            <option value="false">Não</option>
+            <option value="true">Sim</option>
+        </select><br><br>
+        <button type="submit">Editar Usuário</button>
+    </form>
+
+    <script>
+        // Função para carregar produtos
+        function loadProducts() {
+            fetch('/produtos')
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById("product-list");
+                productList.innerHTML = '';
+                data.forEach(product => {
+                    const li = document.createElement("li");
+                    li.textContent = `${product.nome} - R$ ${product.preco}`;
+
+                    // Botões de editar e excluir
+                    const editButton = document.createElement("button");
+                    editButton.textContent = "Editar";
+                    editButton.onclick = function() {
+                        document.getElementById("edit-product-form").style.display = "block";
+                        document.getElementById("edit-produto-id").value = product.id;
+                        document.getElementById("edit-nome-produto").value = product.nome;
+                        document.getElementById("edit-preco-produto").value = product.preco;
+                    };
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Excluir";
+                    deleteButton.onclick = function() {
+                        deleteProduct(product.id);
+                    };
+
+                    li.appendChild(editButton);
+                    li.appendChild(deleteButton);
+                    productList.appendChild(li);
+                });
+            });
+        }
+
+        // Função para carregar usuários
+        function loadUsers() {
+            fetch('/usuarios')
+            .then(response => response.json())
+            .then(data => {
+                const userList = document.getElementById("user-list");
+                userList.innerHTML = '';
+                data.forEach(user => {
+                    const li = document.createElement("li");
+                    li.textContent = `${user.nome} - ${user.email}`;
+
+                    // Botões de editar e excluir
+                    const editButton = document.createElement("button");
+                    editButton.textContent = "Editar";
+                    editButton.onclick = function() {
+                        document.getElementById("edit-user-form").style.display = "block";
+                        document.getElementById("edit-usuario-id").value = user.id;
+                        document.getElementById("edit-nome-usuario").value = user.nome;
+                        document.getElementById("edit-email-usuario").value = user.email;
+                        document.getElementById("edit-senha-usuario").value = user.senha;
+                        document.getElementById("edit-telefone-usuario").value = user.telefone;
+                        document.getElementById("edit-admin-usuario").value = user.administrador ? 'true' : 'false';
+                    };
+
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "Excluir";
+                    deleteButton.onclick = function() {
+                        deleteUser(user.id);
+                    };
+
+                    li.appendChild(editButton);
+                    li.appendChild(deleteButton);
+                    userList.appendChild(li);
+                });
+            });
+        }
+
+        // Função para criar um novo produto
+        document.getElementById("create-product-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nome = document.getElementById("nome-produto").value;
+            const preco = document.getElementById("preco-produto").value;
+
+            fetch('/produtos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nome, preco })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto criado com sucesso!');
+                loadProducts();
+            });
+        });
+
+        // Função para editar um produto
+        document.getElementById("edit-product-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const id = document.getElementById("edit-produto-id").value;
+            const nome = document.getElementById("edit-nome-produto").value;
+            const preco = document.getElementById("edit-preco-produto").value;
+
+            fetch(`/produtos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nome, preco })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto editado com sucesso!');
+                loadProducts();
+            });
+        });
+
+        // Função para excluir um produto
+        function deleteProduct(id) {
+            fetch(`/produtos/${id}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto excluído com sucesso!');
+                loadProducts();
+            });
+        }
+
+        // Função para criar um novo usuário
+        document.getElementById("create-user-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const nome = document.getElementById("nome-usuario").value;
+            const email = document.getElementById("email-usuario").value;
+            const senha = document.getElementById("senha-usuario").value;
+            const telefone = document.getElementById("telefone-usuario").value;
+            const administrador = document.getElementById("admin-usuario").value === "true"; // Obtém se é administrador
+
+            fetch('/usuarios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nome, email, senha, telefone, administrador })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Usuário criado com sucesso!');
+                loadUsers();
+            });
+        });
+
+        // Função para editar um usuário
+        document.getElementById("edit-user-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const id = document.getElementById("edit-usuario-id").value;
+            const nome = document.getElementById("edit-nome-usuario").value;
+            const email = document.getElementById("edit-email-usuario").value;
+            const senha = document.getElementById("edit-senha-usuario").value;
+            const telefone = document.getElementById("edit-telefone-usuario").value;
+            const administrador = document.getElementById("edit-admin-usuario").value === "true"; // Obtém se é administrador
+
+            fetch(`/usuarios/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ nome, email, senha, telefone, administrador })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Usuário editado com sucesso!');
+                loadUsers();
+            });
+        });
+
+        // Função para excluir um usuário
+        function deleteUser(id) {
+            fetch(`/usuarios/${id}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Usuário excluído com sucesso!');
+                loadUsers();
+            });
+        }
+
+        // Carregar produtos e usuários ao carregar a página
+        loadProducts();
+        loadUsers();
+    </script>
+</body>
+</html>

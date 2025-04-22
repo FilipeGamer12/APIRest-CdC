@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página do Usuário Comum</title>
+</head>
+<body>
+    <h1>Página do Usuário Comum</h1>
+
+    <h2>Produtos</h2>
+    <ul id="product-list">
+        <!-- Lista de produtos será carregada aqui -->
+    </ul>
+
+    <script>
+        function loadProducts() {
+            fetch('/produtos')
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById("product-list");
+                productList.innerHTML = '';
+                data.forEach(product => {
+                    const li = document.createElement("li");
+                    li.textContent = `${product.nome} - R$ ${product.preco}`;
+                    const button = document.createElement("button");
+                    button.textContent = "Comprar";
+                    button.onclick = function() {
+                        alert(`Você comprou o produto: ${product.nome}`);
+                    };
+                    li.appendChild(button);
+                    productList.appendChild(li);
+                });
+            });
+        }
+
+        // Carregar produtos ao carregar a página
+        window.onload = function() {
+            loadProducts();
+        };
+    </script>
+</body>
+</html>

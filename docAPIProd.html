@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentação da API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        pre {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .route {
+            margin-top: 30px;
+        }
+        .route h3 {
+            color: #e74c3c;
+        }
+        .endpoint {
+            background-color: #3498db;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .example {
+            background-color: #1abc9c;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .response {
+            background-color: #f39c12;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .request-body {
+            background-color: #34495e;
+            color: white;
+            padding: 10px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+        }
+        .code-section {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Documentação da API de Gerenciamento de Produtos e Usuários</h1>
+    <p>Esta API permite gerenciar produtos e usuários, permitindo a criação, leitura, atualização e exclusão de ambos. A API também permite o gerenciamento de permissões de administradores para usuários.</p>
+
+    <div class="route">
+        <h2>1. Produtos</h2>
+
+        <h3>1.1 Criar Produto</h3>
+        <div class="endpoint">POST /produtos</div>
+        <p>Cria um novo produto no sistema.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+POST /produtos
+Content-Type: application/json
+
+{
+    "nome": "Produto Exemplo",
+    "preco": 29.99
+}
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "id": 1,
+    "nome": "Produto Exemplo",
+    "preco": 29.99
+}
+            </pre>
+        </div>
+
+        <h3>1.2 Listar Produtos</h3>
+        <div class="endpoint">GET /produtos</div>
+        <p>Retorna todos os produtos no sistema.</p>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+[
+    {
+        "id": 1,
+        "nome": "Produto Exemplo",
+        "preco": 29.99
+    },
+    {
+        "id": 2,
+        "nome": "Outro Produto",
+        "preco": 49.99
+    }
+]
+            </pre>
+        </div>
+
+        <h3>1.3 Editar Produto</h3>
+        <div class="endpoint">PUT /produtos/{id}</div>
+        <p>Atualiza as informações de um produto existente.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+PUT /produtos/1
+Content-Type: application/json
+
+{
+    "nome": "Produto Atualizado",
+    "preco": 39.99
+}
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "id": 1,
+    "nome": "Produto Atualizado",
+    "preco": 39.99
+}
+            </pre>
+        </div>
+
+        <h3>1.4 Deletar Produto</h3>
+        <div class="endpoint">DELETE /produtos/{id}</div>
+        <p>Remove um produto do sistema.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+DELETE /produtos/1
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "mensagem": "Produto excluído com sucesso"
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="route">
+        <h2>2. Usuários</h2>
+
+        <h3>2.1 Criar Usuário</h3>
+        <div class="endpoint">POST /usuarios</div>
+        <p>Criar um novo usuário no sistema, com opção de administrador.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+POST /usuarios
+Content-Type: application/json
+
+{
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "senha": "senha123",
+    "telefone": "1234567890",
+    "administrador": true
+}
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "id": 1,
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "telefone": "1234567890",
+    "administrador": true
+}
+            </pre>
+        </div>
+
+        <h3>2.2 Listar Usuários</h3>
+        <div class="endpoint">GET /usuarios</div>
+        <p>Retorna todos os usuários no sistema.</p>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+[
+    {
+        "id": 1,
+        "nome": "João Silva",
+        "email": "joao@example.com",
+        "telefone": "1234567890",
+        "administrador": true
+    },
+    {
+        "id": 2,
+        "nome": "Maria Oliveira",
+        "email": "maria@example.com",
+        "telefone": "9876543210",
+        "administrador": false
+    }
+]
+            </pre>
+        </div>
+
+        <h3>2.3 Editar Usuário</h3>
+        <div class="endpoint">PUT /usuarios/{id}</div>
+        <p>Atualiza as informações de um usuário existente, incluindo o campo de administrador.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+PUT /usuarios/1
+Content-Type: application/json
+
+{
+    "nome": "João Silva Atualizado",
+    "email": "joao@novoemail.com",
+    "senha": "novaSenha123",
+    "telefone": "1234567890",
+    "administrador": false
+}
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "id": 1,
+    "nome": "João Silva Atualizado",
+    "email": "joao@novoemail.com",
+    "telefone": "1234567890",
+    "administrador": false
+}
+            </pre>
+        </div>
+
+        <h3>2.4 Deletar Usuário</h3>
+        <div class="endpoint">DELETE /usuarios/{id}</div>
+        <p>Remove um usuário do sistema.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+DELETE /usuarios/1
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "mensagem": "Usuário excluído com sucesso"
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="route">
+        <h2>3. Login</h2>
+
+        <h3>3.1 Realizar Login</h3>
+        <div class="endpoint">POST /login</div>
+        <p>Permite que um usuário realize login fornecendo seu email e senha.</p>
+        <div class="code-section">
+            <h4>Exemplo de Requisição</h4>
+            <pre>
+POST /login
+Content-Type: application/json
+
+{
+    "email": "joao@example.com",
+    "senha": "senha123"
+}
+            </pre>
+        </div>
+        <div class="code-section">
+            <h4>Exemplo de Resposta</h4>
+            <pre class="response">
+{
+    "success": true,
+    "usuario": {
+        "id": 1,
+        "nome": "João Silva",
+        "email": "joao@example.com",
+        "telefone": "1234567890",
+        "administrador": true
+    }
+}
+            </pre>
+        </div>
+    </div>
+
+    <div class="route">
+        <h2>4. Interfaces Web</h2>
+        <p>A API foi projetada para funcionar com interfaces web, permitindo que usuários e administradores interajam diretamente com a aplicação no navegador.</p>
+
+        <h3>4.1 Página do Administrador</h3>
+        <p>A página de administrador permite:</p>
+        <ul>
+            <li>Criar, editar e excluir produtos;</li>
+            <li>Criar, editar e excluir usuários;</li>
+            <li>Visualizar todos os produtos e usuários registrados.</li>
+        </ul>
+        <p>Além disso, o administrador pode marcar usuários como administradores durante a criação ou edição.</p>
+
+        <h3>4.2 Página do Usuário Comum</h3>
+        <p>A página de usuário comum permite:</p>
+        <ul>
+            <li>Visualizar todos os produtos disponíveis para compra;</li>
+            <li>Simular a compra de produtos (a compra é fictícia e não envolve transações reais).</li>
+        </ul>
+    </div>
+</body>
+</html>
